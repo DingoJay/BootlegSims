@@ -1,0 +1,4 @@
+{
+    "Hache" : {"Composant" : [], "EfficientVS" : ["Arbre"], "ammount" : 3, "Varry" : 0, "Health" : -1}, 
+    "Arbre" : {"Composant" : ["Bûche"], "EfficientVS" : [], "ammount" : 3, "Varry" : 2, "Health" : 6}
+}

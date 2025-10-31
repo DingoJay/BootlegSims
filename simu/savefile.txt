@@ -1,0 +1,7 @@
+T|840
+P|Bob|False
+P|Bap|True
+L|Maison
+OUTIL|Hache|Arbre
+OUTIL|Tronconneuse|Arbre|Sapin|Chêne
+W|Bûcheron|700|10|Bûche
