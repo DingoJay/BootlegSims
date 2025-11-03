@@ -3,16 +3,16 @@ import java.util.Vector;
 import java.util.Arrays;
 import java.util.Scanner;
 
-public class LifeSimulator {
+public class Simulateur {
     
-    private Vector<Travail> work;
-    private Vector<Personnage> perso;
-    private Vector<Lieu> lieu;
-    private final Constants cons;
+    public Vector<Travail> work;
+    public Vector<Personnage> perso;
+    public Vector<Lieu> lieu;
+    public final Constants cons;
     public int heure = 720; // En minutes 720 = 12h00
     public Personnage player;
 
-    public LifeSimulator() {
+    public Simulateur() {
 
         cons = new Constants();
         perso = new Vector<Personnage>();
@@ -69,8 +69,47 @@ public class LifeSimulator {
         }
         
         else System.out.println("Savefile non existante. Créez un fichier \"savefile.txt\" sans restriction de lecture et d'écriture");
+        //FIN
+
+        boolean game = true;
+        int state = 0;
+        Scanner sc = new Scanner(System.in);
+        String ERROR_IN = "N'entrez qu'un nombre";
+
+        while (game) {
+
+            System.out.println("\033[H\033[2J"); // Clear terminal
+            switch(state) {
+                case 0: // Choose
+                    System.out.println("Bienvenue\nEntrez l'id de votre personnage");
+                    getPerso();
+                    int p;
+                    try { p = Integer.valueOf(sc.next());
+                        if (p >= 0 && p < perso.size() && !perso.get(p).getNPC()) { 
+                            player = perso.get(p);
+                            state = 1;
+                        }
+                    }
+                    catch(Exception e) {System.out.println(ERROR_IN);}
+                    break;
+                case 1: // Status
+                    Lieu l = player.getLocation();
+                    System.out.println("Vous êtes dans : " + l.getName());
+                    System.out.println("1) Aller\t2) Prendre\t3) Utiliser");
+                    try { p = Integer.valueOf(sc.next());
+                        if (p == 1) { // Aller
+                            System.out.println("Aller où ?");
+                            getLieu();
+                            p = sc.nextInt();
+                            if (p >= 0 && p < lieu.size()) player.goTo(lieu.get(p));
+                        }
+                    }
+                    catch(Exception e) {System.out.println(ERROR_IN);}
+                    break;
+            }
+        }
+        sc.close();
     }
-    // FIN
 
     public void getPerso(int n) {
     
@@ -139,56 +178,4 @@ public class LifeSimulator {
         System.out.println("Quel outil");
     }
 
-
-
-    public static void main(String[] args) {
-
-        LifeSimulator ls = new LifeSimulator();
-        boolean game = true;
-        int state = 0;
-        Scanner sc = new Scanner(System.in);
-        String ERROR_IN = "N'entrez qu'un nombre";
-
-        while (game) {
-
-            System.out.println("\033[H\033[2J"); // Clear terminal
-            switch(state) {
-                case 0: // Choose
-                    System.out.println("Bienvenue\nEntrez l'id de votre personnage");
-                    ls.getPerso();
-                    int p;
-                    try { p = Integer.valueOf(sc.next());
-                        if (p >= 0 && p < ls.perso.size() && !ls.perso.get(p).getNPC()) { 
-                            ls.player = ls.perso.get(p);
-                            state = 1;
-                        }
-                    }
-                    catch(Exception e) {System.out.println(ERROR_IN);}
-                    break;
-                case 1: // Status
-                    Lieu l = ls.player.getLocation();
-                    System.out.println("Vous êtes dans : " + l.getName());
-                    System.out.println("1) Aller\t2) Prendre\t3) Utiliser");
-                    try { p = Integer.valueOf(sc.next());
-                        if (p == 1) { // Aller
-                            System.out.println("Aller où ?");
-                            ls.getLieu();
-                            p = sc.nextInt();
-                            if (p >= 0 && p < ls.lieu.size()) ls.player.goTo(ls.lieu.get(p));
-                        }
-                    }
-                    catch(Exception e) {System.out.println(ERROR_IN);}
-                    break;
-            }
-        }
-
-        sc.close();
-
-        ls.getOutils(ls.lieu.size()-1);
-        ls.getPerso();
-        ls.getTime();
-        ls.perso.get(1).goTo(ls.lieu.get(1));
-        ls.getPerso(ls.lieu.get(1));
-        System.out.println(ls.cons.drawUI("BOOTLEG SIMS", 200, "forret"));
-    }
 }
